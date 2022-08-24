@@ -1,0 +1,345 @@
+/*
+  ======================================
+	Author : 'Avinab giri';
+	url : 'https://www.avinabgiri.in';
+	======================================
+*/
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400&family=Open+Sans:wght@300;400;500;600;700&family=Roboto:wght@100;300;400;500;700&display=swap");
+* {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+h1, h2, h3, h4, h5, h6, p, b, strong {
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
+}
+
+.btn-outline-light {
+  background: #005dab;
+  border-color: #005dab;
+  color: #ffffff;
+}
+
+.bg-gradient-success {
+  background-image: linear-gradient(310deg, #17ad37, #98ec2d);
+  color: #fff !important;
+}
+.bg-gradient-success:hover {
+  color: #a9d2ff;
+}
+
+.bg-gradient-info {
+  background-image: linear-gradient(310deg, #2152ff, #21d4fd);
+  color: #fff !important;
+}
+.bg-gradient-info:hover {
+  color: #a9d2ff;
+}
+
+.clr-gradient-info {
+  color: linear-gradient(310deg, #2152ff, #21d4fd);
+}
+
+.bg-gradient-primary {
+  background-image: linear-gradient(310deg, #7928ca, #ff0080);
+  color: #fff !important;
+}
+.bg-gradient-primary:hover {
+  background-color: #cb0c9f;
+  border-color: #cb0c9f;
+}
+
+.bg-gradient-danger {
+  background-image: linear-gradient(310deg, #ea0606, #ff667c);
+  color: #fff !important;
+}
+.bg-gradient-danger.shadow {
+  box-shadow: -2px 4px 5px rgba(249, 73, 88, 0.3490196078);
+}
+.bg-gradient-danger:hover {
+  color: #ffd4d7;
+}
+
+.button {
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 7px -1px rgba(0, 0, 0, 0.11), 0 2px 4px -1px rgba(0, 0, 0, 0.07);
+  background-size: 150%;
+  background-position-x: 25%;
+  display: inline-block;
+  font-weight: 700;
+  line-height: 1.4;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-size: 12px;
+  border-radius: 5px;
+  transition: all 0.15s ease-in;
+  letter-spacing: 0.5px;
+}
+
+#roomSection {
+  position: relative;
+  padding: 50px 0;
+  min-height: 480px;
+  overflow: hidden;
+}
+#roomSection .inlineIcon {
+  padding: 20px 0 17px 0;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#roomSection .inlineIcon li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 5px;
+}
+#roomSection .inlineIcon li .icon {
+  margin-right: 5px;
+  filter: blur(0.6px);
+  opacity: 0.8;
+}
+#roomSection .inlineIcon li span {
+  font-size: 10px;
+  font-weight: 500;
+  color: #000000;
+}
+#roomSection .inlineIcon li:last-child {
+  margin: 0;
+  float: none;
+}
+#roomSection .caption {
+  width: 100%;
+}
+#roomSection figure:not(.roomDetail) {
+  position: relative;
+}
+#roomSection .view {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 65px;
+  background: #fff;
+  height: 40px;
+  z-index: 2;
+  border-radius: 0 50px 50px 0;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1803921569);
+}
+#roomSection .view img {
+  height: 100%;
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 15px;
+  padding: 2px 0;
+  transition: 0.3s ease-in-out;
+}
+#roomSection h3 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 21px;
+  font-weight: 900;
+  color: #000;
+}
+#roomSection h4 {
+  font-size: 22px;
+  font-family: "Cormorant Garamond", serif;
+}
+#roomSection h4 strong {
+  font-family: "Jost", sans-serif;
+}
+#roomSection .priceBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#roomSection .priceBox .viewContent {
+  display: inline-flex;
+}
+#roomSection .priceBox .viewContent .item {
+  margin-right: 10px;
+}
+#roomSection .priceBox .viewContent .item strong {
+  font-size: 12px;
+  opacity: 0.6;
+}
+#roomSection .priceBox .viewContent .item:last-child {
+  margin-right: 0;
+}
+#roomSection .listroBox:hover figure::before {
+  opacity: 0.5;
+}
+#roomSection .listroBox:hover .view {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+}
+#roomSection .listroBox:hover .view img {
+  transform: translateX(0);
+}
+
+#roomInput {
+  border: none !important;
+}
+
+.booking-search {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+  bottom: 0;
+}
+
+.priceTag {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.discountBar {
+  position: relative;
+  display: flex;
+  margin-left: 10px;
+}
+.discountBar div {
+  display: flex;
+  background-color: #e63148;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: white;
+  margin-left: 0.6rem;
+  padding: 0.2rem 1.5rem 0.2rem 0.5rem;
+  cursor: pointer;
+}
+.discountBar .bar {
+  display: flex;
+  content: "";
+  border-top: 1rem solid transparent;
+  border-bottom: 0.8rem solid transparent;
+  position: absolute;
+  left: 0;
+  border-right: 0.6rem solid #e63148;
+}
+
+.slideshow-container {
+  max-width: 100%;
+  position: relative;
+  margin: auto;
+  overflow: hidden;
+  display: -webkit-inline-box;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.slideshow-container .prev,
+.slideshow-container .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.slideshow-container .next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+.slideshow-container .prev:hover,
+.slideshow-container .next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.slideshow-container .mySlides {
+  width: calc(20% - 5px);
+  margin-right: 5px;
+}
+@media (max-width: 1220px) {
+  .slideshow-container .mySlides {
+    width: calc(24% - 5px);
+  }
+}
+@media (max-width: 921px) {
+  .slideshow-container .mySlides {
+    width: calc(33% - 5px);
+  }
+}
+@media (max-width: 768px) {
+  .slideshow-container .mySlides {
+    width: calc(48% - 5px);
+  }
+}
+@media (max-width: 500px) {
+  .slideshow-container .mySlides {
+    width: calc(98% - 5px);
+  }
+}
+.slideshow-container .fadeAni {
+  -webkit-animation-name: fadeAni;
+          animation-name: fadeAni;
+  -webkit-animation-duration: 1.5s;
+          animation-duration: 1.5s;
+}
+
+.listroBox {
+  -webkit-animation-name: fadeAni;
+          animation-name: fadeAni;
+  -webkit-animation-duration: 1.5s;
+          animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fadeAni {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeAni {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.group {
+  position: relative;
+  padding: 15px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1098039216);
+  margin-bottom: 25px;
+  border-radius: 3px;
+}
+.group .groupText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  transform: translate(-7px, -50%);
+  padding: 0 5px;
+}
+.group label {
+  color: black;
+}/*# sourceMappingURL=style.css.map */
