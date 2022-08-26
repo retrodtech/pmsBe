@@ -137,7 +137,7 @@ $bid = explode('=',$dataArry[1])[1];
 
            
             $grossCharge = getBookingDetailById($oid)['totalPrice'];
-            pr(getBookingDetailById($oid));
+            
             $userPayHtml = '';
             $getPayPercentage = getPercentageValueByAmount($userPay,$grossCharge);
             if($grossCharge > $userPay){

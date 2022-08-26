@@ -345,7 +345,11 @@ function getBookingDetailById($bid,$roomNo=''){
     $bookingSql = mysqli_query($conDB, $bookingQuery);
     $subTotalPrice = 0;
     $totalRoom = mysqli_num_rows($bookingSql);
+
+    $gstPrice = 0;
+
     if(mysqli_num_rows($bookingSql) > 0){
+
         while($row = mysqli_fetch_assoc($bookingSql)){
             $adult = $row['adult'];
             $child = $row['child'];
@@ -361,6 +365,17 @@ function getBookingDetailById($bid,$roomNo=''){
             $totalAdult += $adult;
             $totalChild += $child;
 
+            $couponCode = '';
+
+            $singleRoomPriceCalculator = SingleRoomPriceCalculator($roomId, $roomDId, $adult, $child , $noRoom, $night, $roomPrice, $childPrice , $adultPrice, $couponCode); 
+
+            $couponCode = $singleRoomPriceCalculator[0]['couponCode'];
+            $couponPrice = $singleRoomPriceCalculator[0]['couponPrice'];
+            $gstPer = $singleRoomPriceCalculator[0]['gstPer'];
+            $gst = $singleRoomPriceCalculator[0]['gst'];
+
+            $gstPrice += $gst;
+
             $room[] = [
                 'rid'=> $roomId,
                 'rdid'=> $roomDId,
@@ -369,11 +384,16 @@ function getBookingDetailById($bid,$roomNo=''){
                 'child'=>$child,
                 'adultPrice'=> $adultPrice,
                 'childPrice'=>$childPrice,
+                'couponCode'=>$couponCode,
+                'couponPrice'=>$couponPrice,
+                'gstPer'=>$gstPer,
+                'gst'=>$gst,
                 'night'=>$night,
                 'checkIn'=>$checkIn,
                 'checkout'=>$checkOut,
             ];
         };
+
     };
 
     foreach($guestRow as $key => $val){
@@ -387,14 +407,14 @@ function getBookingDetailById($bid,$roomNo=''){
 
     $totalPrice = $subTotalPrice + getPercentageValu($subTotalPrice, 12);
 
-    $data = [
-        
+    $data = [        
         'name'=>$name,
         'room'=>$room,
         'guest'=>$guest,
         'totalAdult'=> $totalAdult,
         'totalChild'=> $totalChild,
         'night'=> $night,
+        'gstPrice'=> $gstPrice,
         'subTotalPrice'=>$subTotalPrice,
         'totalPrice'=>$totalPrice
     ];
