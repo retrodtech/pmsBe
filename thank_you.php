@@ -4,12 +4,25 @@ include (SERVER_INCLUDE_PATH.'db.php');
 include (SERVER_INCLUDE_PATH.'function.php');
 
 
-if(!isset($_POST['status'])){
-    redirect('index.php');
-    die();
-}
+// if(!isset($_POST['status'])){
+//     redirect('index.php');
+//     die();
+// }
 
-// pr($_POST);
+// if(!isset($_GET['name'])){
+//     redirect('index.php');
+//     die();
+// }
+
+$id = $_GET['id'];
+$decData = str_openssl_dec($id); 
+
+$dataArry = explode('&',$decData);
+
+
+$slug = explode('=',$dataArry[0])[1];
+$bid = explode('=',$dataArry[1])[1];
+
 
 
 
@@ -19,7 +32,7 @@ if(!isset($_POST['status'])){
 <html lang="en">
 
 <head>
-    <?php include(SERVER_BOOKING_PATH.'/screen/head.php') ?>
+    <?php include(WS_BE_SERVER_SCREEN_PATH.'head.php') ?>
     <title>Thank You</title>
        <style>
         .download {
@@ -55,7 +68,7 @@ if(!isset($_POST['status'])){
 <body>
 
 
-    <?php include(SERVER_BOOKING_PATH.'/screen/navbar.php') ?>
+    <?php include(WS_BE_SERVER_SCREEN_PATH.'navbar.php') ?>
 
     
     <div class="innerpage-banner left bg-overlay-dark-7" style="padding: 20px 0;">
@@ -80,31 +93,36 @@ if(!isset($_POST['status'])){
     
     <?php
     
-        if($_POST['status'] == 'success'){
-            
-            $bid = $_POST['txnid']; 
-             
-             $email = $_POST['email'];
-             
-             $payid = $_POST['easepayid'];
     
-             mysqli_query($conDB,"update booking set payment_status='complete',payment_id='$payid' where bookinId='".$bid."'");
         
-
             $sql = mysqli_query($conDB, "select * from booking where bookinId = '$bid'");
+
             $booking_row = mysqli_fetch_assoc($sql);
-            
-            $guest = $booking_row['name'];
+
+
+            $bookingNum = $booking_row['id'];
+
+            $guestArry = getGuestDetail($bookingNum, '1')[0];
+
             $oid = $booking_row['id'];
+           
+            $guestName = getGuestDetail($oid,1)[0]['name'];
+            $guestEmail = getGuestDetail($oid,1)[0]['email'];
+
             $hotel_email = hotelDetail()['email'];
             
             $pickupPrice = $booking_row['pickUp'];
             
+
+            $orderDetail = getOrderDetailByOrderId($oid);
+
+            // pr($orderDetail);
             
-            $pickUp = getOrderDetailByOrderId($oid)['pickUp'];
+            $pickUp = $orderDetail['pickUp'];
             
             $couponCode = $booking_row['couponCode'];
             $pickupHtml = '';
+            
             if($pickupPrice != 0){
                 $pickupHtml = '
                     <tr>
@@ -114,9 +132,13 @@ if(!isset($_POST['status'])){
                 ';
             }
             
-            $partial = getOrderDetailByOrderId($oid)['partial'];
-            $userPay = getOrderDetailByOrderId($oid)['userPay'];
-            $grossCharge = getOrderDetailByOrderId($oid)['grossCharge'];
+            
+            $userPay = $orderDetail['userPay'];
+
+           
+            $grossCharge = getBookingDetailById($oid)['totalPrice'];
+            pr(getBookingDetailById($oid));
+            $userPayHtml = '';
             $getPayPercentage = getPercentageValueByAmount($userPay,$grossCharge);
             if($grossCharge > $userPay){
                 $userPayHtml = '
@@ -132,13 +154,16 @@ if(!isset($_POST['status'])){
             $tootalChiltPrice = 0;
             $tootalGstPrice = 0;
             $totalBookingPrice = 0;
-            foreach(getBookingDetailById($oid) as $bookinList){
-                
-                $rid = $bookinList['roomId'];
-                $rdid = $bookinList['roomDId'];
+           
+            
+            
+            foreach(getBookingDetailById($oid)['room'] as $bookinList){
+                // pr($bookinList);
+                $rid = $bookinList['rid'];
+                $rdid = $bookinList['rdid'];
                 $adult = $bookinList['adult'];
                 $child = $bookinList['child'];
-                $noRoom = $bookinList['noRoom'];
+                $noRoom = 1;
                 $night = $bookinList['night'];
                 $roomPrice = $bookinList['roomPrice'];
                 $childPrice = $bookinList['childPrice'];
@@ -178,11 +203,13 @@ if(!isset($_POST['status'])){
                 $tootalGstPrice += $singleRoomPriceCalculator[0]['gst']; 
                 $totalBookingPrice += $singleRoomPriceCalculator[0]['total']; 
             }
+            
     
             $totalBookingPrice += $pickupPrice;
             
-            send_email($email,$guest,$hotel_email,RETROD_BOOKING_EMAIL,orderEmail($oid),'Your Booking Confirmed');
-        }
+            // send_email($email,$guest,$hotel_email,RETROD_BOOKING_EMAIL,orderEmail($oid),'Your Booking Confirmed');
+  
+            
         
         ?>
         
@@ -190,9 +217,7 @@ if(!isset($_POST['status'])){
                 <div class="container">
                     <div class="row">
         
-        
-        
-        
+
                         <div class="col-lg-8 col-md-6 col-sm-12">
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -214,7 +239,7 @@ if(!isset($_POST['status'])){
         
                                         <div class="login-top cardInfo">
                                             <h3>Booking Information</h3>
-                                            <p>Booking for <?php echo ucfirst($booking_row['name']) ?> at <?php echo SITE_NAME ?></p>
+                                            <p>Booking for <?php echo ucfirst($guestName) ?> at <?php echo SITE_NAME ?></p>
                                         </div>
         
         
@@ -227,12 +252,12 @@ if(!isset($_POST['status'])){
                                                 </tr>
                                                 <tr>
                                                     <td class="bookex">Guest Name:</td>
-                                                    <td style="text-align:right"><?php echo $booking_row['name'] ?></td>
+                                                    <td style="text-align:right"><?php echo $guestName ?></td>
                                                 </tr>
                                                 
                                                 <tr>
                                                     <td class="bookex">E-mail:</td>
-                                                    <td style="text-align:right"><?php echo $booking_row['email'] ?></td>
+                                                    <td style="text-align:right"><?php echo $guestEmail ?></td>
                                                 </tr>
                                                 
                                                 
@@ -240,11 +265,7 @@ if(!isset($_POST['status'])){
                                                 <tr>
                                                     <td class="bookex">Payment status:</td>
                                                     <td style="text-align:right">
-                                                        <?php if($booking_row['payment_status'] == 'complete'){
-                                                            echo 'Success';
-                                                        }else{
-                                                            echo 'Failed';
-                                                        } ?>
+                                                        <?= paymentStatus($booking_row['payment_status'])[0]['name']?>
                                                     </td>
                                                 </tr>
                                                 
@@ -309,7 +330,7 @@ if(!isset($_POST['status'])){
                                                 ?>
                                                 <tr>
                                                     <td class="bookex"><strong>Total:</strong></td>
-                                                    <td><strong>Rs <?php echo $totalBookingPrice ?></strong></td>
+                                                    <td><strong>Rs <?php echo $grossCharge ?></strong></td>
                                                 </tr>
                                                 <?php
                                                 
@@ -350,7 +371,7 @@ if(!isset($_POST['status'])){
             
 
     
-    <?php include(SERVER_BOOKING_PATH.'/screen/footer.php') ?>
+    <?php include(WS_BE_SERVER_SCREEN_PATH.'footer.php') ?>
 
     
     <script src="js/jquery.min.js" type="text/javascript"></script>

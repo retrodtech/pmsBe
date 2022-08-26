@@ -134,7 +134,7 @@ $id = getRoomIdBySlug($_GET['id']);
     var date = $date;
     var rdid = $rdid;
     $.ajax({
-        url: "<?php echo FRONT_SITE.'/admin/include/ajax/room_detail.php' ?>",
+        url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
         type: 'post',
         data: { type: 'checkDateAvailableOrNot',date: date,rdid:rdid},
         success: function (data) {
@@ -207,7 +207,7 @@ function showSlides(n) {
 
     function loadCheckoutSection() {
         $.ajax({
-            url:"<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
+            url:"<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
             type: 'post',
             data: { type: 'load_checkout_section',page: 'detail' },
             success: function (data) {
@@ -228,7 +228,7 @@ function showSlides(n) {
         var rdid = $rdid;
         
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room_detail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
             type: 'post',
             data: { type: 'loadRoomDataSlide',date: date, rdid:rdid},
             success: function (data) {
@@ -241,7 +241,7 @@ function showSlides(n) {
         var id = '<?php echo $_GET['id'] ?>';
         $('#roomSection .container').html('');
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room_detail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
             type: 'post',
             data: { type: 'loadRoom', id:id},
             success: function (data) {
@@ -253,7 +253,7 @@ function showSlides(n) {
     function loadInputDate(){
         var rdid = $('#dateLoadPick').data('rdid');
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room_detail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
             type: 'post',
             data: { type: 'loadInputDate',},
             success: function (data) {
@@ -265,7 +265,7 @@ function showSlides(n) {
 
     function loadCheckOutDate(){
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room_detail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
             type: 'post',
             data: { type: 'loadCheckOutDate',},
             success: function (data) {
@@ -278,7 +278,7 @@ function showSlides(n) {
         var date = $(this).val();
         var rdid = $('#dateLoadPick').data('rdid');
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room_detail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
             type: 'post',
             data: { type: 'addDate',date:date},
             success: function (data) {
@@ -292,7 +292,7 @@ function showSlides(n) {
     $('#dateLoadPickTo').change(function(){
         var date = $(this).val();
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room_detail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room_detail.php' ?>",
             type: 'post',
             data: { type: 'checkOutDate',date:date},
             success: function (data) {
@@ -343,7 +343,7 @@ function showSlides(n) {
         var id = $rdid;
         var room_id = $rid;
         var room = $room;
-        var url =  "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>";
+        var url =  "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>";
         $.ajax({
             url: url,
             type: 'post',
@@ -374,7 +374,7 @@ function showSlides(n) {
     $(document).on('submit', '#room_guest_select_form', function (e) {
         e.preventDefault();
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
             type: 'post',
             data: $('#room_guest_select_form').serialize(),
             success: function (data) {
@@ -390,7 +390,7 @@ function showSlides(n) {
         var date = $(this).data('date');
         var rid = $(this).data('rid');
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/otherDetail.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/otherDetail.php' ?>",
             type: 'post',
             data: { type: 'nightChange', date: date, rid: rid },
             success: function (data) {
@@ -405,7 +405,7 @@ function showSlides(n) {
         var key = $(this).data('key');
 
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
             type: 'post',
             data: { type: 'removeGustContent', key: key },
             success: function (data) {
@@ -425,7 +425,7 @@ function showSlides(n) {
             room = 1;
         }
         $.ajax({
-            url: "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
+            url: "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
             type: 'post',
             data: { type: 'checkRoomNumber', room: room, rdid: rdid, action: action, id: id },
             success: function (data) {
@@ -473,7 +473,7 @@ function showSlides(n) {
 
             $.ajax({
                 type: 'post',
-                url: "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
+                url: "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
                 data: $('#personalDetailForm').serialize(),
                 success: function (result) {
                 }

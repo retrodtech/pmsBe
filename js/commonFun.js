@@ -28,15 +28,23 @@
             type: 'post',
             data: { type: 'roomCheckoutDateUpdate',key: key},
             success: function (data) {
-                var result = JSON.parse(data);
-                console.log(result);
-                $('#side_checkout .roomCheckoutDate.'+key).html(result.checkOut);
-                $('#side_checkout .updateRoomGst.'+key).html(result.gst);
-                $('#side_checkout .roomNightUpdate.'+key).html(result.night);
-                $('#side_checkout .noOfight.'+key).val(result.noNight);
-                $('#side_checkout .shortDateUpdate.'+key).html(result.shortDateUpdate);
-                $('#side_checkout .totalRoomPriceupdate.'+key).html(result.total);
-                $('#side_checkout .updateRoomTotalPrice.'+key).html(result.total);
+                
+                var responce = JSON.parse(data);
+
+                $.each( responce, function( i, result ){
+                    key = result.key;
+                    
+                    $('#side_checkout .roomCheckoutDate.'+key).html(result.checkOut);
+                    $('#side_checkout .updateRoomGst.'+key).html(result.gst);
+                    $('#side_checkout .roomNightUpdate.'+key).html(result.night);
+                    $('#side_checkout .noOfight.'+key).val(result.noNight);
+                    $('#side_checkout .shortDateUpdate.'+key).html(result.shortDateUpdate);
+                    $('#side_checkout .totalRoomPriceupdate.'+key).html(result.total);
+                    $('#side_checkout .updateRoomTotalPrice.'+key).html(result.total);
+                });
+
+                
+
             }
         });
     }
@@ -55,29 +63,6 @@
         userRoomCheck(room_id, id, '1');
     });
 
-
-
-    $(document).on('click', '#continue_btn', function () {
-        $html = '<div class="book_detail">';
-        $html += '<h4>Guest Details</h4>';
-        $html += '<ul id="book_detail_action_btn"><li class="active">Personal</li><li>Business</li></ul>';
-        $html += '<div class="content">';
-        $html += '<form method="POST" id="personalDetailForm" action="' + site + 'pay">';
-        $html += '<div class="form-group"><label for="personName">Name</label><input type="text" class="form-content" name="personName" id="personName" required><div id="personNameError" ></div></div>';
-        $html += '<div class="form-group"><label for="personEmail">Email</label><input type="email" class="form-content" name="personEmail" id="personEmail" required><div id="personEmailError" ></div></div>';
-        $html += '<div id="bussness_content"><div class="form-group"><label for="companyName">Company name</label><input type="text" class="form-content" name="companyName" id="companyName"><div id="companyNameError"></div></div>';
-        $html += '<div class="form-group"><label for="companyGst">Company GST</label><input type="text" class="form-content" name="companyGst" id="companyGst"></div><div id="companyGstError"></div></div>';
-        $html += '<input type="hidden" value="persionCheckout" name="type">';
-        $html += '<div class="form-group"><label for="personPhoneNo">Phone no</label><input type="number" class="form-content" name="personPhoneNo" id="personPhoneNo" required><div id="personPhoneNoError"></div></div>';
-        $html += '<div class="form-group p10 row"><div class="col-6"><button id="backBookDetail" class="btn btn-light">Back</button></div> <div class="col-6"> <button id="continueBtnSubmit" type="submit" name="checkOutSubmit" class="btn btn-success">Pay Now</button>  </div></div>';
-        $html += '</form>';
-        $html += '</div></div>';
-        $('#continue_btn').hide();
-        $('#side_checkout .booking-summary-box').css({ 'display': 'none' });
-        $('#side_checkout .booking-summary-box').addClass('m_none');
-
-        $('#side_checkout #personalDetail').html($html);
-    });
 
     $(document).on('click', '#backBookDetail', function (e) {
         e.preventDefault();
@@ -138,38 +123,38 @@
 
 
 
-    $(document).on('submit', '#personalDetailForm', function (e) {
+    // $(document).on('submit', '#personalDetailForm', function (e) {
 
 
-        var name = $('#personName').val().trim();
-        var email = $('#personEmail').val().trim();
-        var phone = $('#personPhoneNo').val().trim();
+    //     var name = $('#personName').val().trim();
+    //     var email = $('#personEmail').val().trim();
+    //     var phone = $('#personPhoneNo').val().trim();
 
-        if (name == '') {
-            e.preventDefault();
-        } else if (email == '') {
-            e.preventDefault();
-        } else if (phone == '') {
-            e.preventDefault();
-        } else if (phone.length != 10) {
-            e.preventDefault();
-            alert('Invalid mobile No');
-        } else {
+    //     if (name == '') {
+    //         e.preventDefault();
+    //     } else if (email == '') {
+    //         e.preventDefault();
+    //     } else if (phone == '') {
+    //         e.preventDefault();
+    //     } else if (phone.length != 10) {
+    //         e.preventDefault();
+    //         alert('Invalid mobile No');
+    //     } else {
 
-            $.ajax({
-                type: 'post',
-                url: site + 'include/ajax/room.php',
-                data: $('#personalDetailForm').serialize(),
-                success: function (result) {
-                }
-            });
-        }
-
-
+    //         $.ajax({
+    //             type: 'post',
+    //             url: site + 'include/ajax/room.php',
+    //             data: $('#personalDetailForm').serialize(),
+    //             success: function (result) {
+    //             }
+    //         });
+    //     }
 
 
 
-    });
+
+
+    // });
 
 
     function priceLoad() {
@@ -346,6 +331,7 @@
             type: 'post',
             data: { night: night, key: key, rid: rid },
             success: function (data) {
+                console.log(data);
                 roomCheckoutDateUpdate(key);
                 priceLoad();
                 if (data == 'noNight') {

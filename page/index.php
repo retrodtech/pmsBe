@@ -120,7 +120,7 @@
                             $imgArr = getImageById($room_rows['id']);
                             $advancePayPrice = settingValue()['advancePay'];
 
-                            $url = WS_BE_FRONT_SITE."/room/$rid" ;
+                            $url = WS_BE_FRONT_SITE."?name=$hotelSlug&page=room&id=$rid" ;
                             $faceHtml = '';
                             if($facrId != 0){
                                 $faceImg = FRONT_SITE_IMG.'icon/facing/'.getFacingDetailById($facrId)['img'];
@@ -224,6 +224,7 @@
                                     </div>
                                 </div>
                             ';
+
                             $headerHtml = "<h3><a href='$url'>$rheader</a></h3>";
                             if($price >= $advancePayPrice){
                                

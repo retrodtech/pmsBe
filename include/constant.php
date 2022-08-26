@@ -1,6 +1,6 @@
 <?php
 
-define('SITE_NAME', 'Retrod');
+define('SITE_NAME', 'Jamindars Palace');
 define('BOOK_GENERATE', 'jamindars_');
 define('QP_GENERATE', 'qpjamindars_');
 

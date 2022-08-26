@@ -19,7 +19,7 @@ if($type == 'addDate'){
 }
 
 if($type == 'loadRoom'){ 
-   
+
     $slug = $_POST['id'];
     $sql = mysqli_query($conDB, "select * from room where slug = '$slug'");
     if(mysqli_num_rows($sql) > 0){
@@ -150,7 +150,7 @@ if($type == 'loadRoom'){
                                 </li>
                                 <li>
                                     <?php
-                                   
+                                    
                                     if(loopRoomExist($room_id,$_SESSION['checkIn'],$_SESSION['checkout'],$detail_row['id']) > 0){
                                         if($roomLowPrice > settingValue()['advancePay'] ){
                                             $advanceUrl = FRONT_BOOKING_SITE.'/quick-pay';
@@ -293,26 +293,31 @@ if($type == 'checkOutDate'){
 
 
 if($type == 'roomCheckoutDateUpdate'){
-    $key = $_POST['key'];
-    $rdid = explode('-',$key)[0];
-    $getDate = $_SESSION['room'][$key]['checkout'];
-    $checkOut =  date('d-M-Y', strtotime($getDate));
-    $roomPrice = getRoomPriceById($_SESSION['room'][$key]['roomId'],$rdid, $_SESSION['room'][$key]['adult'],$_SESSION['room'][$key]['checkIn']);
+    // $key = $_POST['key'];
+    // $rdid = explode('-',$key)[0];
 
-    $nightPrint = totalSessionPrice()['night'][$key];
-    $gst = totalSessionPrice()['gst'][$key];
-    $noNight = totalSessionPrice()['noNight'][$key];
-    $shortDateUpdate = totalSessionPrice()['shortDateUpdate'][$key];
-    $total = totalSessionPrice()['total'][$key];
+    foreach($_SESSION['room'] as $key=>$val){
+        $rdid = explode('-',$key)[0];
+        $getDate = $_SESSION['room'][$key]['checkout'];
+        $checkOut =  date('d-M-Y', strtotime($getDate));
+        $roomPrice = getRoomPriceById($_SESSION['room'][$key]['roomId'],$rdid, $_SESSION['room'][$key]['adult'],$_SESSION['room'][$key]['checkIn']);
 
-    $data = [
-        'night'=>$nightPrint,
-        'gst'=>$gst,
-        'checkOut'=>$checkOut,
-        'noNight'=>$noNight,
-        'shortDateUpdate'=>$shortDateUpdate,
-        'total'=>$total,
-    ];
+        $nightPrint = totalSessionPrice()['night'][$key];
+        $gst = totalSessionPrice()['gst'][$key];
+        $noNight = totalSessionPrice()['noNight'][$key];
+        $shortDateUpdate = totalSessionPrice()['shortDateUpdate'][$key];
+        $total = totalSessionPrice()['total'][$key];
+
+        $data[] = [
+            'key'=>$key,
+            'night'=>$nightPrint,
+            'gst'=>$gst,
+            'checkOut'=>$checkOut,
+            'noNight'=>$noNight,
+            'shortDateUpdate'=>$shortDateUpdate,
+            'total'=>$total,
+        ];
+    }
 
     echo json_encode($data);
 }

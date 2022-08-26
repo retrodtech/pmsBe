@@ -19,279 +19,290 @@ if(isset($_POST['type'])){
         
                 <div class="booking-summary-box mobile-margin-top" style="overflow:hidden">
                             <div class="room-booking-summary"><br>
-                
-                <?php
-                    $count = 0;
-                    $totalPrice = 0;
-                    $active = '';
-                    foreach($_SESSION['room'] as $key=>$val){
-                        $rdid = explode('-',$key)[0];
-                        $count ++;
-                        
-                        if($count == 1){
-                            $active = 'active';
-                        }else{
-                            $active = '';
-                        }
-                        
-                        $total_price = 0;
-                        $rid = $_SESSION['room'][$key]['roomId'];
-                        $child = $_SESSION['room'][$key]['child'];
-                        $adult = $_SESSION['room'][$key]['adult'];
-                        $checkInTime = $_SESSION['room'][$key]['checkIn'];
-                        $checkInOut = $_SESSION['room'][$key]['checkout'];
-                        $noAdult = $_SESSION['room'][$key]['adult'];
-                        $noRoom = $_SESSION['room'][$key]['room'];
-                        $night = $_SESSION['room'][$key]['night'];
-
-                        $percentage = settingValue()['PartialPaymentPrice'];
-
-                        if(roomExist($rid,$checkInTime) == 0){
-                            $obj->removeroom($key);
-                        }
-        
-                        $roomPrice = getRoomPriceById($rid,$rdid, $adult, $checkInTime);
-                        $adultPrice = getAdultPriceByNoAdult($adult,$rid,$rdid, $checkInTime);
-                        $childPrice = getChildPriceByNoChild($child,$rid,$rdid, $checkInTime);
-                        
-        
-                        if(isset($_SESSION['couponCode'])){
-                            $couponCode = $_SESSION['couponCode'];
-                        }else{
-                            $couponCode = '';
-                        }
-                        
-                        
-                        $singleRoomPriceCalculator = SingleRoomPriceCalculator($rid, $rdid, $adult, $child , $noRoom, $night, $roomPrice, $childPrice , $adultPrice, $couponCode);
-                        
-                        
-                        if(isset($_SESSION['couponCode'])){
-                            $code = $_SESSION['couponCode'];
-                            $value = '' ;
-                            $couponHTML = "
-                                <li style='display: flex;'><div style='width: 100%;position: relative;justify-content: space-between;align-items: center;background: #f1f1f1;padding: 5px 10px;'><span>Coupon</span> <div style='position: relative;'> <small style='color: green;font-weight: 700;'>$code</small>  <span id='couponCloss' style='position: absolute;top: -35px;right: -20px;cursor: pointer;background: red;width: 20px;height: 20px;border-radius: 50%;display: flex;justify-content: center;align-items: center;color: white;font-weight: 700;'>X</span></div> </div></li> 
-                            ";
-                        }else{
-                            $couponHTML = '
-                                <li id="couponInputContent" style="display: flex;"><div class="content"><input id="couponValue" type="text" placeholder="Enter Coupon Code"> </div> <input type="submit" value="Add Coupon" id="add_coupon"> </li> <li style="display: block;padding: 0;height: auto; border-top: none !important"><span id="couponCodeError" style="padding: 5px 0;font-size: 12px;color: red;font-weight: 500;"></span></li>
-                            ';
-                        }
-                        
-                        $totalPrice += $singleRoomPriceCalculator[0]['total'];
-                        
-                        
-                        ?>
-                        
-        
-                                <div class="guestContent <?php echo $active ?>">
-                                    <div class="closeGuestContent badge bg-gradient-danger shadow" data-key="<?php echo $key ?>">X</div>
-                                    <?php
-                                        if(isset($_SESSION['payByRoom']) && $_SESSION['payByRoom'] == 'Yes'){
-                                            echo "<input class='payByRoom' name='payByRoom' type='checkbox' value='$key'>";
-                                        }
-                                    ?>
-                                    <div class="box1">
-                                        <div id="day-list">
-                                            <div class="day-list" style="max-width: 300px;margin: 0 auto;">
-                                                <div class="row">
-                                                    <div class="col-md-8 m4">
-                                                        <ul style="text-align: left;">
-                                                            <li style="display: inline-block;"><b>Check In:</b> <span class="roomCheckinDate"><?php echo formatingDate($checkInTime) ?></span></li>
-                                                            <li style="display: inline-block;"><b>Check Out:</b> <span class="roomCheckoutDate <?php echo $key ?>"><?php echo formatingDate($checkInOut) ?></span></li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-md-4 m4">
-            
-                                                        <div class="quantity">
-                                                            <a data-key="<?php echo $key ?>" data-rid="<?php echo $rid ?>" href="#" class="quantity__minus"><span>-</span></a>
-                                                            <input name="quantity" type="text" class="quantity__input noOfight <?php echo $key ?>" value="<?php echo $night ?>" >
-                                                            <a data-key="<?php echo $key ?>" data-rid="<?php echo $rid ?>" href="#" class="quantity__plus"><span>+</span></a>
-                                                        </div>
-                                                        
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
+                    <?php
+                        $firstKey = array_key_first($_SESSION['room']);
+                        $checkInTime = $_SESSION['room'][$firstKey]['checkIn'];
+                        $checkInOut = $_SESSION['room'][$firstKey]['checkout'];
+                        $nightCount = getNightByTwoDates($checkInTime,$checkInOut);
+                        $rid = $_SESSION['room'][$firstKey]['roomId'];
+                    
+                    ?>
+                        <div class="checkInDatePrint">
+                            <div id="day-list">
+                                <div class="day-list" style="max-width: 300px;margin: 0 auto;">
+                                    <div class="row">
+                                        <div class="col-md-8 m4">
+                                            <ul style="text-align: left;">
+                                                <li style="display: inline-block;"><b>Check In:</b> <span class="roomCheckinDate"><?php echo formatingDate($checkInTime) ?></span></li>
+                                                <li style="display: inline-block;"><b>Check Out:</b> <span class="roomCheckoutDate <?php echo $firstKey ?>"><?php echo formatingDate($checkInOut) ?></span></li>
+                                            </ul>
                                         </div>
-            
-                                        <div class="container-">
-                                            <div id="room_summary">
-                                                <div class="room_summary_box">
-                                                    <p><b><?php echo ucfirst(getRoomHeaderById($rid)) ?></b></p>
-                                                    <ul>
-                                                        <li><span>Room Price: </span> <span>Rs <?php 
-                                                        
-                                                            echo $singleRoomPriceCalculator[0]['room'];
-                                                            
-                                                        ?></span></li>
-                                                        
-                                                        <li>
-                                                            <span>Adults: <?php echo $singleRoomPriceCalculator[0]['adultPrint']; ?></span>  <span>Rs <?php
-                                                                echo $singleRoomPriceCalculator[0]['adult'] ;
-                                                            ?></span>
-                                                        </li>
-                                                        <li>
-                                                                <span>Child: <?php echo $singleRoomPriceCalculator[0]['childPrint'];  ?></span> <span>Rs <?php
-                                                            
-                
-                                                            echo  $singleRoomPriceCalculator[0]['child'] ;
-                                                            
-                                                            ?></span> 
-                                                        </li>  
-                                                        
-                                                        <?php 
+                                        <div class="col-md-4 m4">
 
-                                                            if($singleRoomPriceCalculator[0]['couponCode'] != ''){
-                                                                $couponPer = $singleRoomPriceCalculator[0]['couponCode'];
-                                                                $couponPrice = $singleRoomPriceCalculator[0]['couponPrice'];
-                                                                echo '
-                                                                    <li><span>Coupon ( '.$couponPer.'  ):</span> <span id="gstPrint">- Rs '.$couponPrice.'</span></li>
-                                                                ';
-                                                            }
-            
-                                                            $nightPrice = $singleRoomPriceCalculator[0]['nightPrice'];
-                                        
-                                                            echo "
-                                                            <li>
-                                                                <span>Night</span>
-                                                                <span>Rs <strong class='roomNightUpdate $key'>$nightPrice</strong> </span>
-                                                            </li>
-                                                        ";
-                                                            
-                                                            
-                                                        ?>
-                                                        
-                                                        <li>
-                                                            <span>GST ( <?php echo $singleRoomPriceCalculator[0]['gstPer'] ?>% ):</span> <span id="gstPrint">Rs <strong class="updateRoomGst <?php echo $key ?>"><?php echo $singleRoomPriceCalculator[0]['gst'] ?></strong></span>
-                                                        </li>
-
-                                                        <li>
-                                                            <span>Total:</span> <span >Rs <strong class="updateRoomTotalPrice <?php echo $key ?>"><?php echo $singleRoomPriceCalculator[0]['total'] ?></strong></span>
-                                                        </li>
-                                                        
-                                                    </ul>
-                                                </div>
+                                            <div class="quantity">
+                                                <a data-key="<?php echo $firstKey ?>" data-rid="<?php echo $rid ?>" href="#" class="quantity__minus"><span>-</span></a>
+                                                <input name="quantity" type="text" class="quantity__input noOfight <?php echo $firstKey ?>" value="<?php echo $nightCount ?>" >
+                                                <a data-key="<?php echo $firstKey ?>" data-rid="<?php echo $rid ?>" href="#" class="quantity__plus"><span>+</span></a>
                                             </div>
+                                            
                                         </div>
-                                    </div>
-
-                                    <div class="box2">
-                                        <div class="content">
-                                            <div class="drow">
-                                                <h4><?php echo ucfirst(getRoomHeaderById($rid)) ?></h4>
-                                                <p class="shortDateUpdate <?php echo $key ?>"><?php echo getDateFormatByTwoDate($checkInTime,$checkInOut) ?></p>
-                                            </div>
-                                            <div class="drow">
-                                                <ul>
-                                                    <li>
-                                                        <img src="<?php echo FRONT_SITE_IMG ?>icon/adult.png" alt="Adult Icon">
-                                                        <p><?php echo $adult ?></p>
-                                                    </li>
-                                                    <li>
-                                                        <img src="<?php echo FRONT_SITE_IMG ?>icon/child.png" alt="Child Icon">
-                                                        <p><?php echo $child ?></p>
-                                                    </li>
-                                                </ul>
-                                                <strong>Rs <span class="totalRoomPriceupdate <?php echo $key ?>"><?php 
-                                                        
-                                                        echo $singleRoomPriceCalculator[0]['total'];
-                                                        
-                                                    ?></span>
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                
-                        <?php  } ?>
-        
-                        <ul>
-                            <li id="pickupContent" style="display:none"></li>
-                                <?php
-                                
-                                    echo $couponHTML;
-
-                                    $_SESSION['gossCharge'] = $totalPrice;
-                                
-                                ?>
-                                
-                        </ul>
-        
-                        <div class="room-services"><br></div>
-                                <?php $_SESSION['roomTotalPrice'] = $totalPrice ?>
-                                <div class="room_summary_box row" style="margin: 0;">
-                                    <div class="col-6">Total Amount</div>
-                                    <div class="col-6" style="display: flex;justify-content: end;"> <b>Rs <span id="totalPriceValue"><?php echo number_format(totalSessionPrice()['price'],2)  ?></span></b></div>
-                                </div>
-                                <br/>
-                                <div style="display: inline-block;margin-bottom: 15px;">
-                                        <?php
-                                            $pickUp = settingValue()['pckupDropCaption'];
-                                            if(settingValue()['pckupDropStatus'] == 1){
-                                                $select = '';
-                                                calculateTotalBookingPrice();
-                                                if(isset($_SESSION['pickUp']) && $_SESSION['pickUp'] != ''){
-                                                    $select = 'checked';
-                                                }
-                                                echo '<div class="pickup">
-                                                        <input '.$select.' type="checkbox" name="pickup" id="pickup">
-                                                        <label for="pickup">Pick & Drop <span class="tool" data-tooltip="'.$pickUp.'">
-                                                                                                <i class="far fa-question-circle"></i>
-                                                                                            </span></label>
-                                                    </div>';
-                                            }
-                                        ?>
-            
-                                        <?php
-                                            $partial = settingValue()['partialPaymentCaption'];
-                                            if(settingValue()['partialPaymentStatus'] == 1){
-                                                calculateTotalBookingPrice();
-                                                $select = '';
-                                                if(isset($_SESSION['partial']) && $_SESSION['partial'] == 'Yes'){
-                                                    $select = 'checked';
-                                                }
-                                                echo '<div class="partial">
-                                                        <input '.$select.' type="checkbox" name="partial" id="partial">
-                                                        <label for="partial">Pay '.$percentage.'% Now<span class="tool" data-tooltip="'.$partial.'">
-                                                                                                <i class="far fa-question-circle"></i>
-                                                                                            </span></label>
-                                                    </div>';
-                                            }
-                                        ?>
-
-                                        <?php
-                                            $payByRoom = settingValue()['payByRoom'];
-                                            if($payByRoom == 1){
-                                                $select = '';
-                                                if(isset($_SESSION['payByRoom']) && $_SESSION['payByRoom'] == 'Yes'){
-                                                    $select = 'checked';
-                                                }
-                                                echo '  <div class="payByRoom">
-                                                            <input type="checkbox" name="payByRoom" '.$select.' id="payByRoom">
-                                                            <label for="payByRoom">Pay By Room<span class="tool" data-tooltip="'.$payByRoom.'"> <i class="far fa-question-circle"></i></span></label>
-                                                        </div>';
-                                            }
-                                        ?>
-                                        
                                         
                                     </div>
-                                <div class="room_summary_box" style="display: flex;justify-content: space-between;align-items: self-start;">
-                                    
-                                    
-                                    <?php
-                                        $BookingSite = FRONT_BOOKING_SITE;
-                                        echo "<div> <a href='$BookingSite' class='btn btn-outline-info'><span class=''> Add Room</span></a></div>";
-                                        
-                                        echo "<div class='btn btn-primary' id='continue_btn'> <span class=''> Continue</span></div>";
-                                        
-                                    ?>
-                                    
                                 </div>
                             </div>
+                            
                         </div>
-                <?php
+                    <?php
+                        $count = 0;
+                        $totalPrice = 0;
+                        $active = '';
+                        foreach($_SESSION['room'] as $key=>$val){
+                            $rdid = explode('-',$key)[0];
+                            $count ++;
+                            
+                            if($count == 1){
+                                $active = 'active';
+                            }else{
+                                $active = '';
+                            }
+                            
+                            $total_price = 0;
+                            $rid = $_SESSION['room'][$key]['roomId'];
+                            $child = $_SESSION['room'][$key]['child'];
+                            $adult = $_SESSION['room'][$key]['adult'];
+                            $checkInTime = $_SESSION['room'][$key]['checkIn'];
+                            $checkInOut = $_SESSION['room'][$key]['checkout'];
+                            $noAdult = $_SESSION['room'][$key]['adult'];
+                            $noRoom = $_SESSION['room'][$key]['room'];
+                            $night = $_SESSION['room'][$key]['night'];
+
+                            $percentage = settingValue()['PartialPaymentPrice'];
+
+                            if(roomExist($rid,$checkInTime) == 0){
+                                $obj->removeroom($key);
+                            }
+            
+                            $roomPrice = getRoomPriceById($rid,$rdid, $adult, $checkInTime);
+                            $adultPrice = getAdultPriceByNoAdult($adult,$rid,$rdid, $checkInTime);
+                            $childPrice = getChildPriceByNoChild($child,$rid,$rdid, $checkInTime);
+                            
+            
+                            if(isset($_SESSION['couponCode'])){
+                                $couponCode = $_SESSION['couponCode'];
+                            }else{
+                                $couponCode = '';
+                            }
+                            
+                            
+                            $singleRoomPriceCalculator = SingleRoomPriceCalculator($rid, $rdid, $adult, $child , $noRoom, $night, $roomPrice, $childPrice , $adultPrice, $couponCode);
+                            
+                            
+                            if(isset($_SESSION['couponCode'])){
+                                $code = $_SESSION['couponCode'];
+                                $value = '' ;
+                                $couponHTML = "
+                                    <li style='display: flex;'><div style='width: 100%;position: relative;justify-content: space-between;align-items: center;background: #f1f1f1;padding: 5px 10px;'><span>Coupon</span> <div style='position: relative;'> <small style='color: green;font-weight: 700;'>$code</small>  <span id='couponCloss' style='position: absolute;top: -35px;right: -20px;cursor: pointer;background: red;width: 20px;height: 20px;border-radius: 50%;display: flex;justify-content: center;align-items: center;color: white;font-weight: 700;'>X</span></div> </div></li> 
+                                ";
+                            }else{
+                                $couponHTML = '
+                                    <li id="couponInputContent" style="display: flex;"><div class="content"><input id="couponValue" type="text" placeholder="Enter Coupon Code"> </div> <input type="submit" value="Add Coupon" id="add_coupon"> </li> <li style="display: block;padding: 0;height: auto; border-top: none !important"><span id="couponCodeError" style="padding: 5px 0;font-size: 12px;color: red;font-weight: 500;"></span></li>
+                                ';
+                            }
+                            
+                            $totalPrice += $singleRoomPriceCalculator[0]['total'];
+                            
+                            
+                            ?>
+                            
+            
+                                    <div class="guestContent <?php echo $active ?>">
+                                        <div class="closeGuestContent badge bg-gradient-danger shadow" data-key="<?php echo $key ?>">X</div>
+                                        <?php
+                                            if(isset($_SESSION['payByRoom']) && $_SESSION['payByRoom'] == 'Yes'){
+                                                echo "<input class='payByRoom' name='payByRoom' type='checkbox' value='$key'>";
+                                            }
+                                        ?>
+                                        <div class="box1">
+                                            
+                
+                                            <div class="container-">
+                                                <div id="room_summary">
+                                                    <div class="room_summary_box">
+                                                        <p><b><?php echo ucfirst(getRoomHeaderById($rid)) ?></b></p>
+                                                        <ul>
+                                                            <li><span>Room Price: </span> <span>Rs <?php 
+                                                            
+                                                                echo $singleRoomPriceCalculator[0]['room'];
+                                                                
+                                                            ?></span></li>
+                                                            
+                                                            <li>
+                                                                <span>Adults: <?php echo $singleRoomPriceCalculator[0]['adultPrint']; ?></span>  <span>Rs <?php
+                                                                    echo $singleRoomPriceCalculator[0]['adult'] ;
+                                                                ?></span>
+                                                            </li>
+                                                            <li>
+                                                                    <span>Child: <?php echo $singleRoomPriceCalculator[0]['childPrint'];  ?></span> <span>Rs <?php
+                                                                
+                    
+                                                                echo  $singleRoomPriceCalculator[0]['child'] ;
+                                                                
+                                                                ?></span> 
+                                                            </li>  
+                                                            
+                                                            <?php 
+
+                                                                if($singleRoomPriceCalculator[0]['couponCode'] != ''){
+                                                                    $couponPer = $singleRoomPriceCalculator[0]['couponCode'];
+                                                                    $couponPrice = $singleRoomPriceCalculator[0]['couponPrice'];
+                                                                    echo '
+                                                                        <li><span>Coupon ( '.$couponPer.'  ):</span> <span id="gstPrint">- Rs '.$couponPrice.'</span></li>
+                                                                    ';
+                                                                }
+                
+                                                                $nightPrice = $singleRoomPriceCalculator[0]['nightPrice'];
+                                            
+                                                                echo "
+                                                                <li>
+                                                                    <span>Night</span>
+                                                                    <span>Rs <strong class='roomNightUpdate $key'>$nightPrice</strong> </span>
+                                                                </li>
+                                                            ";
+                                                                
+                                                                
+                                                            ?>
+                                                            
+                                                            <li>
+                                                                <span>GST ( <?php echo $singleRoomPriceCalculator[0]['gstPer'] ?>% ):</span> <span id="gstPrint">Rs <strong class="updateRoomGst <?php echo $key ?>"><?php echo $singleRoomPriceCalculator[0]['gst'] ?></strong></span>
+                                                            </li>
+
+                                                            <li>
+                                                                <span>Total:</span> <span >Rs <strong class="updateRoomTotalPrice <?php echo $key ?>"><?php echo $singleRoomPriceCalculator[0]['total'] ?></strong></span>
+                                                            </li>
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="box2">
+                                            <div class="content">
+                                                <div class="drow">
+                                                    <h4><?php echo ucfirst(getRoomHeaderById($rid)) ?></h4>
+                                                    
+                                                </div>
+                                                <div class="drow">
+                                                    <ul>
+                                                        <li>
+                                                            <img src="<?php echo FRONT_SITE_IMG ?>icon/adult.png" alt="Adult Icon">
+                                                            <p><?php echo $adult ?></p>
+                                                        </li>
+                                                        <li>
+                                                            <img src="<?php echo FRONT_SITE_IMG ?>icon/child.png" alt="Child Icon">
+                                                            <p><?php echo $child ?></p>
+                                                        </li>
+                                                    </ul>
+                                                    <strong>Rs <span class="totalRoomPriceupdate <?php echo $key ?>"><?php 
+                                                            
+                                                            echo $singleRoomPriceCalculator[0]['total'];
+                                                            
+                                                        ?></span>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    
+                            <?php  } ?>
+            
+                            <ul>
+                                <li id="pickupContent" style="display:none"></li>
+                                    <?php
+                                    
+                                        echo $couponHTML;
+
+                                        $_SESSION['gossCharge'] = $totalPrice;
+                                    
+                                    ?>
+                                    
+                            </ul>
+            
+                            <div class="room-services"><br></div>
+                                    <?php $_SESSION['roomTotalPrice'] = $totalPrice ?>
+                                    <div class="room_summary_box row" style="margin: 0;">
+                                        <div class="col-6">Total Amount</div>
+                                        <div class="col-6" style="display: flex;justify-content: end;"> <b>Rs <span id="totalPriceValue"><?php echo number_format(totalSessionPrice()['price'],2)  ?></span></b></div>
+                                    </div>
+                                    <br/>
+                                    <div style="display: inline-block;margin-bottom: 15px;">
+                                            <?php
+                                                $pickUp = settingValue()['pckupDropCaption'];
+                                                if(settingValue()['pckupDropStatus'] == 1){
+                                                    $select = '';
+                                                    calculateTotalBookingPrice();
+                                                    if(isset($_SESSION['pickUp']) && $_SESSION['pickUp'] != ''){
+                                                        $select = 'checked';
+                                                    }
+                                                    echo '<div class="pickup">
+                                                            <input '.$select.' type="checkbox" name="pickup" id="pickup">
+                                                            <label for="pickup">Pick & Drop <span class="tool" data-tooltip="'.$pickUp.'">
+                                                                                                    <i class="far fa-question-circle"></i>
+                                                                                                </span></label>
+                                                        </div>';
+                                                }
+                                            ?>
+                
+                                            <?php
+                                                $partial = settingValue()['partialPaymentCaption'];
+                                                if(settingValue()['partialPaymentStatus'] == 1){
+                                                    calculateTotalBookingPrice();
+                                                    $select = '';
+                                                    if(isset($_SESSION['partial']) && $_SESSION['partial'] == 'Yes'){
+                                                        $select = 'checked';
+                                                    }
+                                                    echo '<div class="partial">
+                                                            <input '.$select.' type="checkbox" name="partial" id="partial">
+                                                            <label for="partial">Pay '.$percentage.'% Now<span class="tool" data-tooltip="'.$partial.'">
+                                                                                                    <i class="far fa-question-circle"></i>
+                                                                                                </span></label>
+                                                        </div>';
+                                                }
+                                            ?>
+
+                                            <?php
+                                                $payByRoom = settingValue()['payByRoom'];
+                                                if($payByRoom == 1){
+                                                    $select = '';
+                                                    if(isset($_SESSION['payByRoom']) && $_SESSION['payByRoom'] == 'Yes'){
+                                                        $select = 'checked';
+                                                    }
+                                                    echo '  <div class="payByRoom">
+                                                                <input type="checkbox" name="payByRoom" '.$select.' id="payByRoom">
+                                                                <label for="payByRoom">Pay By Room<span class="tool" data-tooltip="'.$payByRoom.'"> <i class="far fa-question-circle"></i></span></label>
+                                                            </div>';
+                                                }
+                                            ?>
+                                            
+                                            
+                                        </div>
+                                    <div class="room_summary_box" style="display: flex;justify-content: space-between;align-items: self-start;">
+                                        
+                                        
+                                        <?php
+                                            $BookingSite = FRONT_BOOKING_SITE;
+                                            echo "<div> <a href='$BookingSite' class='btn btn-outline-info'><span class=''> Add Room</span></a></div>";
+                                            
+                                            echo "<div class='btn btn-primary' id='continue_btn'> <span class=''> Continue</span></div>";
+                                            
+                                        ?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                    <?php
         
         
                 }else{
@@ -663,6 +674,7 @@ if(isset($_POST['type'])){
         }
 
         $bid = getBookingNumber();
+        $_SESSION['bookingId'] = $bid;
         $grossAmount = $_SESSION['gossCharge'];
         $userPay = $_SESSION['roomTotalPrice'];
 
@@ -670,7 +682,13 @@ if(isset($_POST['type'])){
         $noOfRum = 1;
         $bookingSrc = 5;
 
-        $sql = "insert into booking(hotelId,bookinId,payment_status,add_on,couponCode,pickUp,userPay,nroom,bookingSource) values('$hotelId','$bid','pending','$add_on','$couponCode','$pickUp','$userPay','$noOfRum','$bookingSrc')";
+        $roomArryFirstKey = array_key_first($_SESSION['room']);
+        $checkIn = $_SESSION['room'][$roomArryFirstKey]['checkIn'];
+        $checkOut = $_SESSION['room'][$roomArryFirstKey]['checkout'];
+
+        $resNo = generateRecipt();
+
+        $sql = "insert into booking(hotelId,bookinId,payment_status,add_on,couponCode,pickUp,userPay,nroom,bookingSource,checkIn,checkOut,reciptNo) values('$hotelId','$bid','2','$add_on','$couponCode','$pickUp','$userPay','$noOfRum','$bookingSrc','$checkIn','$checkOut','$resNo')";
 
         mysqli_query($conDB, $sql);
         $_SESSION['OID']=mysqli_insert_id($conDB);
@@ -705,7 +723,7 @@ if(isset($_POST['type'])){
                     $gstPer = $singleRoomPriceCalculator[0]['gstPer'];
                     $total = $singleRoomPriceCalculator[0]['total'];
 
-                    $roomNum = getRoomNumber('',1,$rid,$checkInTime,$checkInOut)[0]['roomNo'];
+                    $roomNum = getRoomNumber('',1,$rid,$checkInTime,$checkInOut,'res')[0]['roomNo'];
                     
                     array_push($roomNumArr, $roomNum);
                     $bid = $_SESSION['OID'];
@@ -1092,7 +1110,8 @@ if(isset($_POST['night'])){
         $_SESSION['room'][$key]['night'] = $oldNight;
         echo 'noNight';
     }else{
-        $_SESSION['room'][$key]['checkout'] = date('Y-m-d',$check_out_time);
+        $obj->checkInDateUpdate('',date('Y-m-d',$check_out_time));
+        // $_SESSION['room'][$key]['checkout'] = date('Y-m-d',$check_out_time);
     }
 
 

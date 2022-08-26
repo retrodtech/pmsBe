@@ -1183,7 +1183,7 @@ if($type == 'getRoomNumByRID'){
 
 if(isset($_POST['submitStatus'])){
     if($_POST['submitStatus'] == 'addReservationSubmit'){
-        pr($_POST);
+        
         
         $bookId = BOOK_GENERATE.unique_id(5);
         

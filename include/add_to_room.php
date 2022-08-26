@@ -30,14 +30,25 @@ class add_to_room{
     function emptyroom(){
         unset($_SESSION['room']);
     }
-    function checkInDateUpdate($date,$date2,$key=''){
-        $_SESSION['checkIn'] = $date;
+
+    function checkInDateUpdate($date='',$date2,$key=''){
+        if($date != ''){
+            $_SESSION['checkIn'] = $date;
+        }
         $_SESSION['checkout'] = $date2;
 
-        $_SESSION['room'][$key]['checkIn'] = $date;
+        foreach($_SESSION['room'] as $key=>$val){
+            $checkIn = $_SESSION['room'][$key]['checkIn'];
+            $checkout = $_SESSION['room'][$key]['checkout'];
+            $night = getNightByTwoDates($checkIn, $checkout);
             $_SESSION['room'][$key]['checkout'] = $date2;
+            $_SESSION['night'][$key]['night'] = $night;
+        }
+
+        
         
     }
+    
     function totalroom(){
         if(isset($_SESSION['room'])){
             return count($_SESSION['room']);

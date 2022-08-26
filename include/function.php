@@ -1,5 +1,5 @@
 <?php
-
+define('KEY', 'RETROd121');
 function redirect($link){
     ob_start();
     header('Location: '.$link);
@@ -19,16 +19,18 @@ function safeData($data){
    return mysqli_real_escape_string($conDB, $data);
 }
 
-function str_openssl_dec($data,$iv){
+function str_openssl_dec($data,$iv=''){
+    $iv = ($iv == '') ?  '1234567891011121' : $iv;  
     $key = KEY; 
-    $cipher = "aes128"; 
+    $cipher = "AES-128-CTR"; 
     $option = 0; 
     return openssl_decrypt($data, $cipher, $key, $option, $iv);
 }
 
-function str_openssl_enc($data,$iv){
+function str_openssl_enc($data,$iv=''){
+    $iv = ($iv == '') ?  '1234567891011121' : $iv;  
     $key = KEY; 
-    $cipher = "aes128"; 
+    $cipher = "AES-128-CTR"; 
     $option = 0; 
     return openssl_encrypt($data, $cipher, $key, $option, $iv);
 }
@@ -296,6 +298,24 @@ function getGuestDetail($bId='',$group='',$gid=''){
     return $data;
 }
 
+function paymentStatus($pid=''){
+    global $conDB;
+    $sql = "select * from payment_status where id != ''";
+    if($pid != ''){
+        $sql .= " and id = '$pid'";
+    }
+
+    $query = mysqli_query($conDB, $sql);
+
+    if(mysqli_num_rows($query) > 0){
+        while($row = mysqli_fetch_assoc($query)){
+            $data[] = $row;
+        }
+    }
+
+    return $data;
+}
+
 function getBookingDetailById($bid,$roomNo=''){
     global $conDB;
 
@@ -324,7 +344,7 @@ function getBookingDetailById($bid,$roomNo=''){
     }
     $bookingSql = mysqli_query($conDB, $bookingQuery);
     $subTotalPrice = 0;
-
+    $totalRoom = mysqli_num_rows($bookingSql);
     if(mysqli_num_rows($bookingSql) > 0){
         while($row = mysqli_fetch_assoc($bookingSql)){
             $adult = $row['adult'];
@@ -340,8 +360,21 @@ function getBookingDetailById($bid,$roomNo=''){
             $subTotalPrice += $roomPrice + $adultPrice + $childPrice;
             $totalAdult += $adult;
             $totalChild += $child;
-        }
-    }
+
+            $room[] = [
+                'rid'=> $roomId,
+                'rdid'=> $roomDId,
+                'roomPrice'=>$roomPrice,
+                'adult'=>$adult,
+                'child'=>$child,
+                'adultPrice'=> $adultPrice,
+                'childPrice'=>$childPrice,
+                'night'=>$night,
+                'checkIn'=>$checkIn,
+                'checkout'=>$checkOut,
+            ];
+        };
+    };
 
     foreach($guestRow as $key => $val){
         if($key == 0){
@@ -355,7 +388,9 @@ function getBookingDetailById($bid,$roomNo=''){
     $totalPrice = $subTotalPrice + getPercentageValu($subTotalPrice, 12);
 
     $data = [
+        
         'name'=>$name,
+        'room'=>$room,
         'guest'=>$guest,
         'totalAdult'=> $totalAdult,
         'totalChild'=> $totalChild,
@@ -367,7 +402,11 @@ function getBookingDetailById($bid,$roomNo=''){
     return $data;
 }
 
-
+function getRoomNameById($rid){
+    global $conDB;
+    $sql = mysqli_fetch_assoc(mysqli_query($conDB, "select header from room where id = '$rid'"));
+    return $sql['header'];
+}
 
 // Booking Detail End
 
@@ -1260,13 +1299,43 @@ function settingValue(){
 
 function countTotalBooking($rid, $date=''){
     global $conDB;
-    $BookSql ="SELECT booking.id FROM bookingdetail,booking where booking.id = bookingdetail.bid and bookingdetail.roomId = '$rid' and booking.payment_status='complete' and bookingdetail.checkIn <= '$date' && bookingdetail.checkOut > '$date'";
-                
-    // $check_sold_arr = mysqli_fetch_assoc(mysqli_query($conDB,$BookSql));
 
-    // $check_sold= $check_sold_arr['noRoom'];
-    $check_sold= 1;
-    return $check_sold;
+    $BookSql ="SELECT id FROM booking where payment_status='complete' and checkIn <= '$date' && checkOut > '$date'";
+                
+    $check_sql = mysqli_query($conDB,$BookSql);
+    $roomNo = 0;
+    if(mysqli_num_rows($check_sql) > 0){
+        while($row = mysqli_fetch_assoc($check_sql)){
+            $bId = $row['id'];
+            $roomNo += countTotalBookingDetailByBID($bId);
+        }
+    }
+
+    return $roomNo;
+}
+
+function countTotalBookingDetailByBID($bid){
+    global $conDB;
+    $sql = "select * from bookingdetail where bid = '$bid'";
+    $totalRow = mysqli_num_rows(mysqli_query($conDB, $sql));
+
+    return $totalRow;
+}
+
+function getOrderDetailByOrderId($oid){
+    global $conDB;
+    $sql = mysqli_query($conDB, "select * from booking where id= '$oid'");
+    $row = mysqli_fetch_assoc($sql);
+    return $row;
+}
+
+function getPercentageValueByAmount($actualAmout, $totalAmount){
+    $data = 0;
+    if($actualAmout != 0 && $totalAmount != 0){
+        $data = ($actualAmout / $totalAmount) * 100;
+    }
+    
+    return round($data);
 }
 
 function getTotalRoom($rid, $date,$date2=''){
@@ -1531,7 +1600,7 @@ function totalSessionPrice(){
         $checkInOut = $_SESSION['room'][$key]['checkout'];
         $noAdult = $_SESSION['room'][$key]['adult'];
         $noRoom = $_SESSION['room'][$key]['room'];
-        $night = $_SESSION['room'][$key]['night'];
+        $night =getNightByTwoDates($_SESSION['room'][$key]['checkIn'],$_SESSION['room'][$key]['checkout']);
 
         $percentage = settingValue()['PartialPaymentPrice'];
 
@@ -1556,7 +1625,7 @@ function totalSessionPrice(){
         $price += $singleRoomPriceCalculator[0]['total'];
         $gst[$key]=$singleRoomPriceCalculator[0]['gst'];
         $nightPrint[$key]=$singleRoomPriceCalculator[0]['nightPrice'];
-        $noNight[$key]=$singleRoomPriceCalculator[0]['noNight'];
+        $noNight[$key]=getNightByTwoDates($_SESSION['room'][$key]['checkIn'],$_SESSION['room'][$key]['checkout']);
         $shortDate[$key]=getDateFormatByTwoDate($_SESSION['room'][$key]['checkIn'],$_SESSION['room'][$key]['checkout']);
         $total[$key]=$singleRoomPriceCalculator[0]['total'];
     }

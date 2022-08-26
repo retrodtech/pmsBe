@@ -41,8 +41,8 @@ include($site."/config.php");
                $grossAmount += $_SESSION['pickUp'];
            }
            
-           $successUrl = FRONT_SITE."/thank_you.php";
-           $failedUrl = FRONT_SITE."/failed.php";
+           $successUrl = WS_FRONT_SITE."/thank_you.php";
+           $failedUrl = WS_FRONT_SITE."/failed.php";
             
             $postData = array ( 
                     "txnid" => "$bid", 

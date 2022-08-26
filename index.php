@@ -4,6 +4,7 @@
 include ('include/constant.php');
 include (SERVER_INCLUDE_PATH.'db.php');
 include (SERVER_INCLUDE_PATH.'function.php');
+include (SERVER_INCLUDE_PATH.'config.php');
 
 
 $ip = $_SERVER['REMOTE_ADDR'];
@@ -19,6 +20,7 @@ $_SESSION['checkout'] = date('Y-m-d',$current_date + (1 * $one_day));
 
 $hotelArry = getHotelDetail($_GET['name']);
 
+$hotelSlug = $_GET['name'];
 $hotelId = $hotelArry['id'];
 $hotelName = $hotelArry['name'];
 $hotelEmail = $hotelArry['email'];
@@ -50,8 +52,7 @@ $hotelLogo = $hotelArry['logo'];
         }
 
         .amenitie_list li::before{
-            background: url('<?php echo WS_FRONT_SITE_IMG ?>
-            icon/tick.svg') no-repeat center center;
+            background: url('<?php echo WS_FRONT_SITE_IMG ?>icon/tick.svg') no-repeat center center;
         }
 
         .carousel-inner img {
@@ -229,7 +230,7 @@ $hotelLogo = $hotelArry['logo'];
 
 
 
-
+    <script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js"></script>
 
 
     <script>
@@ -240,7 +241,6 @@ $hotelLogo = $hotelArry['logo'];
     $('#loadingScreen').delay(1500).animate({top: '-100%'}, 500);
     $('.loadingCircle').delay(4500).animate({opacity: '0'}, 500);
         
-    
     
     $('#side_checkout').hide();
 
@@ -339,9 +339,6 @@ $hotelLogo = $hotelArry['logo'];
     }
 
 
-
-   
-
     $(document).on('click','#nav_togle', function () {
             $('header .side_content').toggleClass('active');
         });
@@ -351,6 +348,69 @@ $hotelLogo = $hotelArry['logo'];
     
 
     $(document).ready(function () {
+
+        $(document).on('click', '#continue_btn', function () {
+            $html = '<div class="book_detail">';
+            $html += '<h4>Guest Details</h4>';
+            $html += '<ul id="book_detail_action_btn"><li class="active">Personal</li><li>Business</li></ul>';
+            $html += '<div class="content">';
+            $html += '<form method="POST" id="personalDetailForm" action="">';
+            $html += '<div class="form-group"><label for="personName">Name</label><input type="text" class="form-content" name="personName" id="personName" required><div id="personNameError" ></div></div>';
+            $html += '<div class="form-group"><label for="personEmail">Email</label><input type="email" class="form-content" name="personEmail" id="personEmail" required><div id="personEmailError" ></div></div>';
+            $html += '<div id="bussness_content"><div class="form-group"><label for="companyName">Company name</label><input type="text" class="form-content" name="companyName" id="companyName"><div id="companyNameError"></div></div>';
+            $html += '<div class="form-group"><label for="companyGst">Company GST</label><input type="text" class="form-content" name="companyGst" id="companyGst"></div><div id="companyGstError"></div></div>';
+            $html += '<input type="hidden" value="persionCheckout" name="type">';
+            $html += '<div class="form-group"><label for="personPhoneNo">Phone no</label><input type="number" class="form-content" name="personPhoneNo" id="personPhoneNo" required><div id="personPhoneNoError"></div></div>';
+            $html += '<div class="form-group p10 row"><div class="col-6"><button id="backBookDetail" class="btn btn-light">Back</button></div> <div class="col-6"> <button id="continueBtnSubmit" type="submit" name="checkOutSubmit" class="btn btn-success">Pay Now</button>  </div></div>';
+            $html += '</form>';
+            $html += '</div></div>';
+            $('#continue_btn').hide();
+            $('#side_checkout .booking-summary-box').css({ 'display': 'none' });
+            $('#side_checkout .booking-summary-box').addClass('m_none');
+
+            $('#side_checkout #personalDetail').html($html);
+        });
+
+        $(document).on('submit','#personalDetailForm', function(e){
+            e.preventDefault();
+            $.ajax({
+                url : '<?= WS_FRONT_SITE.'/page/pay.php' ?>',
+                type : 'post',
+                data: $('#personalDetailForm').serialize()+'&slug=<?= $hotelSlug ?>',
+                success: function(data){
+                    var easebuzzCheckout = new EasebuzzCheckout('<?= $MERCHANT_KEY ?>', '<?= $ENV ?>');
+
+                    var access_key = JSON.parse(data).data;
+
+                    var options = {
+                        access_key: access_key, 
+                    onResponse: (response) => {
+                        console.log(response);
+                        var pid = response.easepayid; 
+                        var txnid = response.txnid;
+                        var surl = response.surl;
+                        var slug = response.udf1;
+
+                        $.ajax({
+                            url : 'checkoutPay.php',
+                            type: 'post',
+                            data : {pid:pid,txnid:txnid,slug:slug},
+                            success: function(data){
+                                if(data == 1){
+                                    window.location.href = surl;
+                                }
+                            }
+                        });
+
+                    },
+                    theme: "#123456" 
+                    }
+                    easebuzzCheckout.initiatePayment(options);
+                }
+            });
+        });
+
+
         loadCheckoutSection();
         $('#footerDescReadMoreBtn').on('click',function(){
             $('#footerDescReadMoreBtn').hide();
