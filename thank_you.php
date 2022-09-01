@@ -16,7 +16,7 @@ include (SERVER_INCLUDE_PATH.'function.php');
 
 $id = $_GET['id'];
 $decData = str_openssl_dec($id); 
-
+// pr($decData);
 $dataArry = explode('&',$decData);
 
 
@@ -101,6 +101,7 @@ $bid = explode('=',$dataArry[1])[1];
 
 
             $bookingNum = $booking_row['id'];
+            $hId = $booking_row['hotelId'];
 
             $guestArry = getGuestDetail($bookingNum, '1')[0];
 
@@ -136,7 +137,7 @@ $bid = explode('=',$dataArry[1])[1];
             $userPay = $orderDetail['userPay'];
 
            
-            $grossCharge = getBookingDetailById($oid)['totalPrice'];
+            $grossCharge = getBookingDetailById($oid,'',$hId)['totalPrice'];
             
             $userPayHtml = '';
             $getPayPercentage = getPercentageValueByAmount($userPay,$grossCharge);
@@ -157,8 +158,8 @@ $bid = explode('=',$dataArry[1])[1];
            
             
             
-            foreach(getBookingDetailById($oid)['room'] as $bookinList){
-                // pr($bookinList);
+            foreach(getBookingDetailById($oid,'',$hId)['room'] as $bookinList){
+                
                 $rid = $bookinList['rid'];
                 $rdid = $bookinList['rdid'];
                 $adult = $bookinList['adult'];

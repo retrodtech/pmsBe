@@ -232,9 +232,9 @@ function getBookingIdByBVID($bvid){
     return $sql['id'];
 }
 
-function getBookingData($bid = '', $rNum = '', $checkIn='',$id='',$onlyCheckIn=''){
+function getBookingData($bid = '', $rNum = '', $checkIn='',$id='',$onlyCheckIn='',$hotelId=''){
     global $conDB;
-    $hotelId = $_SESSION['ADMIN_ID'];
+    $hotelId = $hotelId;
     $query = "select booking.*,bookingdetail.*, bookingdetail.id as bookingdetailId from booking,bookingdetail where booking.id=bookingdetail.bid and booking.hotelId='$hotelId'";
     if($bid != ''){
         $query .= " and bookingdetail.bid = '$bid'";
@@ -316,11 +316,13 @@ function paymentStatus($pid=''){
     return $data;
 }
 
-function getBookingDetailById($bid,$roomNo=''){
+function getBookingDetailById($bid,$roomNo='',$hId=''){
     global $conDB;
-
-    $checkIn = getBookingData($bid)[0]['checkIn'];
-    $checkOut = getBookingData($bid)[0]['checkOut'];
+    if($hId == ''){
+        $hId = '';
+    }
+    $checkIn = getBookingData($bid,'','','','',$hId)[0]['checkIn'];
+    $checkOut = getBookingData($bid,'','','','',$hId)[0]['checkOut'];
     $night = getNightByTwoDates($checkIn, $checkOut);
 
     $guestRow = array();
@@ -367,7 +369,7 @@ function getBookingDetailById($bid,$roomNo=''){
 
             $couponCode = '';
 
-            $singleRoomPriceCalculator = SingleRoomPriceCalculator($roomId, $roomDId, $adult, $child , $noRoom, $night, $roomPrice, $childPrice , $adultPrice, $couponCode); 
+            $singleRoomPriceCalculator = SingleRoomPriceCalculator($roomId, $roomDId, $adult, $child , $noRoom=1, $night, $roomPrice, $childPrice , $adultPrice, $couponCode); 
 
             $couponCode = $singleRoomPriceCalculator[0]['couponCode'];
             $couponPrice = $singleRoomPriceCalculator[0]['couponPrice'];

@@ -453,38 +453,6 @@ function showSlides(n) {
         CheckRoomNum(id, rdid, value, 'dec');
     });
 
-    $(document).on('submit', '#personalDetailForm', function (e) {
-        // e.preventDefault();
-
-        var name = $('#personName').val().trim();
-        var email = $('#personEmail').val().trim();
-        var phone = $('#personPhoneNo').val().trim();
-
-        if (name == '') {
-            e.preventDefault();
-        } else if (email == '') {
-            e.preventDefault();
-        } else if (phone == '') {
-            e.preventDefault();
-        } else if (phone.length != 10) {
-            e.preventDefault();
-            alert('Invalid mobile No');
-        } else {
-
-            $.ajax({
-                type: 'post',
-                url: "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
-                data: $('#personalDetailForm').serialize(),
-                success: function (result) {
-                }
-            });
-        }
-
-
-
-
-
-        });
 
         $(document).on('click', '#continue_btn', function () {
             var site = '<?php echo WS_FRONT_SITE ?>';

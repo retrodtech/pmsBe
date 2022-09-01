@@ -655,32 +655,34 @@ function showSlides(n) {
         CheckRoomNum(id, rdid, value, 'dec');
     });
 
-    $(document).on('submit', '#personalDetailForm', function (e) {
+    $(document).on('submit', '#personalDetailForm2', function (e) {
         // e.preventDefault();
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("name");
+        alert(c);
+        // var name = $('#personName').val().trim();
+        // var email = $('#personEmail').val().trim();
+        // var phone = $('#personPhoneNo').val().trim();
 
-        var name = $('#personName').val().trim();
-        var email = $('#personEmail').val().trim();
-        var phone = $('#personPhoneNo').val().trim();
+        // if (name == '') {
+        //     e.preventDefault();
+        // } else if (email == '') {
+        //     e.preventDefault();
+        // } else if (phone == '') {
+        //     e.preventDefault();
+        // } else if (phone.length != 10) {
+        //     e.preventDefault();
+        //     alert('Invalid mobile No');
+        // } else {
 
-        if (name == '') {
-            e.preventDefault();
-        } else if (email == '') {
-            e.preventDefault();
-        } else if (phone == '') {
-            e.preventDefault();
-        } else if (phone.length != 10) {
-            e.preventDefault();
-            alert('Invalid mobile No');
-        } else {
-
-            $.ajax({
-                type: 'post',
-                url: "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
-                data: $('#personalDetailForm').serialize(),
-                success: function (result) {
-                }
-            });
-        }
+        //     $.ajax({
+        //         type: 'post',
+        //         url: "<?php echo FRONT_SITE.'/include/ajax/room.php' ?>",
+        //         data: $('#personalDetailForm2').serialize(),
+        //         success: function (result) {
+        //         }
+        //     });
+        // }
 
 
 
@@ -694,7 +696,7 @@ function showSlides(n) {
             $html += '<h4>Guest Details</h4>';
             $html += '<ul id="book_detail_action_btn"><li class="active">Personal</li><li>Business</li></ul>';
             $html += '<div class="content">';
-            $html += '<form method="POST" id="personalDetailForm" action="' + site + '/pay">';
+            $html += '<form method="POST" id="personalDetailForm2" action="' + site + '/pay">';
             $html += '<div class="form-group"><label for="personName">Name</label><input type="text" class="form-content" name="personName" id="personName" required><div id="personNameError" ></div></div>';
             $html += '<div class="form-group"><label for="personEmail">Email</label><input type="email" class="form-content" name="personEmail" id="personEmail" required><div id="personEmailError" ></div></div>';
             $html += '<div id="bussness_content"><div class="form-group"><label for="companyName">Company name</label><input type="text" class="form-content" name="companyName" id="companyName"><div id="companyNameError"></div></div>';

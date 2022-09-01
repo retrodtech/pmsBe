@@ -7,7 +7,7 @@ include (SERVER_INCLUDE_PATH.'add_to_room.php');
 
 // pr(generateRecipt());
 // getRoomNumber($rNo='', $status = '', $rid='', $checkIn ='', $checkOut = '',$ridRes = '')
-pr(SingleRoomPriceCalculator(1, 1, 2, 0 , 1, 1, 1001, 0 , 0));
+pr(getBookingData(1,'','','','',1))
 
 
 ?>

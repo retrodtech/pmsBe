@@ -1,4 +1,3 @@
-
 <?php
 
 include ('include/constant.php');
@@ -30,7 +29,7 @@ $hotelLogo = $hotelArry['logo'];
 
 ?>
 
-<!doctype html> 
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -39,7 +38,9 @@ $hotelLogo = $hotelArry['logo'];
 
     <?php include(WS_BE_SERVER_SCREEN_PATH.'/head.php') ?>
 
-    <title><?php echo SITE_NAME ?> || Booking</title>
+    <title>
+        <?php echo SITE_NAME ?> || Booking
+    </title>
 
     <?php include(WS_BE_SERVER_SCREEN_PATH.'/script.php') ?>
 
@@ -51,7 +52,7 @@ $hotelLogo = $hotelArry['logo'];
             margin: 0 0 0 15px;
         }
 
-        .amenitie_list li::before{
+        .amenitie_list li::before {
             background: url('<?php echo WS_FRONT_SITE_IMG ?>icon/tick.svg') no-repeat center center;
         }
 
@@ -59,10 +60,10 @@ $hotelLogo = $hotelArry['logo'];
             width: 100%;
         }
 
-        .listroBoxmain::before{
-            content:'';
+        .listroBoxmain::before {
+            content: '';
         }
-        
+
         #loadingScreen {
             position: fixed;
             top: 0;
@@ -77,6 +78,7 @@ $hotelLogo = $hotelArry['logo'];
             align-items: center;
             flex-direction: column;
         }
+
         .loadingBox {
             width: 500px;
             margin: 0 auto;
@@ -84,10 +86,12 @@ $hotelLogo = $hotelArry['logo'];
             overflow: hidden;
             position: relative;
         }
+
         .loadingBox img {
             width: 150px;
             height: auto;
         }
+
         .loadingBox .loadingBarContainer {
             width: 100%;
             background: #eee;
@@ -97,93 +101,105 @@ $hotelLogo = $hotelArry['logo'];
             overflow: hidden;
             border-radius: 5px;
         }
+
         .loadingBarContainer .loadingbar {
-        	width: 100%;
-        	height:4px;
-        	background: #000;
-        	position: absolute;
-        	left: -100%;
-        	border-radius: 5px;
-        }
-        .loadingCircle {
-        	width: 75px;
-        	height: 75px;
-        	margin: 30px auto 0;
-        	background: #fff;
-        	display: block;
-        	border-radius: 50%;
-        	position: relative;
-        	overflow: hidden;
-        }
-        .circleOuter {
-        	width: 60px;
-        	height: 60px;
-        	background: #fff;
-        	border-radius: 50%;
-        	position: absolute;
-        	left: 50%;
-        	top: 50%;
-        	transform: translate(-50%, -50%);
-        	z-index: 2;
-        }
-        .circleLoader {
-        	width: 75px;
-        	height: 75px;
-        	background: linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(125,185,232,0) 100%);
-        	position: absolute;
-        	right: 50%;
-        	bottom: 50%;
-        	transform-origin: bottom right;
-        	z-index: 1;
-        	animation: rotateLoader 1.5s linear infinite;
-        }
-        @keyframes rotateLoader {
-            from {transform: rotate(0deg);}
-            to {transform: rotate(360deg);}
-        }
-        .btn-grad{
-            color: #000 !important;
-            cursor:pointer;
-        }
-        .btn-grad:hover{
-            color:#fff !important;
+            width: 100%;
+            height: 4px;
+            background: #000;
+            position: absolute;
+            left: -100%;
+            border-radius: 5px;
         }
 
-        .add_room_detail{
+        .loadingCircle {
+            width: 75px;
+            height: 75px;
+            margin: 30px auto 0;
+            background: #fff;
+            display: block;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .circleOuter {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .circleLoader {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(125, 185, 232, 0) 100%);
+            position: absolute;
+            right: 50%;
+            bottom: 50%;
+            transform-origin: bottom right;
+            z-index: 1;
+            animation: rotateLoader 1.5s linear infinite;
+        }
+
+        @keyframes rotateLoader {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-grad {
+            color: #000 !important;
+            cursor: pointer;
+        }
+
+        .btn-grad:hover {
+            color: #fff !important;
+        }
+
+        .add_room_detail {
             display: flex;
             justify-content: flex-end;
         }
-        .btn-danger{
-            color:#fff !important;
+
+        .btn-danger {
+            color: #fff !important;
         }
 
-        
+
         .btn-outline-light {
             background: #005dab;
             border-color: #005dab;
             color: #ffffff;
         }
-        
     </style>
 
 </head>
-    
-    <div id="loadingScreen">
-        <div class="loadingBox">
-        	<img src="<?php echo FRONT_SITE_IMG.hotelDetail()['logo'] ?>">
-        	<div class="loadingBarContainer">
-        		<div class="loadingbar"></div>
-        	</div>
-        
-        	<div class="loadingCircle">
-        		<div class="circleOuter"></div>
-        		<div class="circleLoader"></div>
-        	</div>
+
+<div id="loadingScreen">
+    <div class="loadingBox">
+        <img src="<?php echo FRONT_SITE_IMG.hotelDetail()['logo'] ?>">
+        <div class="loadingBarContainer">
+            <div class="loadingbar"></div>
+        </div>
+
+        <div class="loadingCircle">
+            <div class="circleOuter"></div>
+            <div class="circleLoader"></div>
         </div>
     </div>
-    
-    
-    <?php    
+</div>
+
+
+<?php    
 
         $pageDirectory = 'page';
 
@@ -200,77 +216,77 @@ $hotelLogo = $hotelArry['logo'];
             include($pageDirectory.'/index.php');
         }
                                                 
-    ?>  
+    ?>
 
-    <div id="side_checkout">
-        <div id="closeBoxSection"></div>
-        <div class="box">
-            <div class="close_side_checkout">X</div>
-            <div id="content"></div>
-            <div id="personalDetail"></div>
-        </div>
+<div id="side_checkout">
+    <div id="closeBoxSection"></div>
+    <div class="box">
+        <div class="close_side_checkout">X</div>
+        <div id="content"></div>
+        <div id="personalDetail"></div>
     </div>
+</div>
 
-    <div class="img_overflow">
-        <div class="close">X</div>
-        <img id="img_overflow_content" src="" alt="">
-    </div>
+<div class="img_overflow">
+    <div class="close">X</div>
+    <img id="img_overflow_content" src="" alt="">
+</div>
 
-    <div id="verifyForm"></div>
-
-
-
-    <?php include(WS_BE_SERVER_SCREEN_PATH.'/footer.php') ?>
-
-
-    
-
-
-    </body>
+<div id="verifyForm"></div>
 
 
 
-    <script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js"></script>
+<?php include(WS_BE_SERVER_SCREEN_PATH.'/footer.php') ?>
 
 
-    <script>
-    
-    
-    $('.loadingbar').delay(500).animate({left: '0'}, 1500);
-    $('.loadingBox').delay(500).animate({opacity: '1'}, 1000);
-    $('#loadingScreen').delay(1500).animate({top: '-100%'}, 500);
-    $('.loadingCircle').delay(4500).animate({opacity: '0'}, 500);
-        
-    
+
+
+
+</body>
+
+
+
+<script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js"></script>
+
+
+<script>
+
+
+    $('.loadingbar').delay(500).animate({ left: '0' }, 1500);
+    $('.loadingBox').delay(500).animate({ opacity: '1' }, 1000);
+    $('#loadingScreen').delay(1500).animate({ top: '-100%' }, 500);
+    $('.loadingCircle').delay(4500).animate({ opacity: '0' }, 500);
+
+
     $('#side_checkout').hide();
 
     $('#searcfForm').on('submit', function (e) {
-            e.preventDefault();
-            $('.formError').html('');
-            var roomHeader = $('#roomHeader').val();
-            var check_in_date = $('#check_in_date').val();
-            var check_out_date = $('#check_out_date').val();
-            var no_of_room = $('#no_of_room').val();
-            var no_of_guest = $('#no_of_guest').val();
+        e.preventDefault();
+        $('.formError').html('');
+        var roomHeader = $('#roomHeader').val();
+        var check_in_date = $('#check_in_date').val();
+        var check_out_date = $('#check_out_date').val();
+        var no_of_room = $('#no_of_room').val();
+        var no_of_guest = $('#no_of_guest').val();
 
-            var headerError = $('#headerError');
-            var checkinError = $('#checkinError');
-            var checkoutError = $('#checkoutError');
-            var noroomError = $('#noroomError');
-            var noGuestError = $('#noGuestError');
+        var headerError = $('#headerError');
+        var checkinError = $('#checkinError');
+        var checkoutError = $('#checkoutError');
+        var noroomError = $('#noroomError');
+        var noGuestError = $('#noGuestError');
 
-            if(roomHeader == ''){
-                headerError.html('Room Requerd');
-            }else if(check_in_date == ''){
-                checkinError.html('Check In Requerd');
-            }else if(check_out_date == ''){
-                checkoutError.html('Check Out Requerd');
-            }else if(no_of_room == ''){
-                noroomError.html('Number of Room Requerd');
-            }else if(no_of_guest == ''){
-                noGuestError.html('Number of Guest Requerd');
-            }else{
-                $.ajax({
+        if (roomHeader == '') {
+            headerError.html('Room Requerd');
+        } else if (check_in_date == '') {
+            checkinError.html('Check In Requerd');
+        } else if (check_out_date == '') {
+            checkoutError.html('Check Out Requerd');
+        } else if (no_of_room == '') {
+            noroomError.html('Number of Room Requerd');
+        } else if (no_of_guest == '') {
+            noGuestError.html('Number of Guest Requerd');
+        } else {
+            $.ajax({
                 url: 'include/ajax/search.php',
                 type: 'post',
                 data: $('#searcfForm').serialize(),
@@ -278,74 +294,74 @@ $hotelLogo = $hotelArry['logo'];
                     $('#load_search').html(data);
                 }
             });
-            }
-        })
+        }
+    })
 
 
-        $(function () {
-            var dateFormat = "dd/mm/yy",
-                from = $("#check_in_date")
-                    .datepicker({
-                        defaultDate: "+1w",
-                        changeMonth: true,
-                        numberOfMonths: 1,
-                        dateFormat: dateFormat,
-                        minDate: 0
-                    })
-                    .on("change", function () {
-                        to.datepicker("option", "minDate", getDate(this));
-                    }),
-                to = $("#check_out_date").datepicker({
+    $(function () {
+        var dateFormat = "dd/mm/yy",
+            from = $("#check_in_date")
+                .datepicker({
                     defaultDate: "+1w",
                     changeMonth: true,
                     numberOfMonths: 1,
                     dateFormat: dateFormat,
                     minDate: 0
                 })
-                    .on("change", function () {
-                        from.datepicker("option", "maxDate", getDate(this));
-                    });
+                .on("change", function () {
+                    to.datepicker("option", "minDate", getDate(this));
+                }),
+            to = $("#check_out_date").datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 1,
+                dateFormat: dateFormat,
+                minDate: 0
+            })
+                .on("change", function () {
+                    from.datepicker("option", "maxDate", getDate(this));
+                });
 
-            function getDate(element) {
-                var date;
-                try {
-                    date = $.datepicker.parseDate(dateFormat, element.value);
-                } catch (error) {
-                    date = null;
-                }
-
-                return date;
+        function getDate(element) {
+            var date;
+            try {
+                date = $.datepicker.parseDate(dateFormat, element.value);
+            } catch (error) {
+                date = null;
             }
+
+            return date;
         }
-        );
+    }
+    );
 
     var bigImg = $('#bigImg').attr('src');
     $('#img_overflow_content').attr('src', bigImg);
 
-    $( function() {
-        $( "#dateLoadPick" ).datepicker();
-    } );
+    $(function () {
+        $("#dateLoadPick").datepicker();
+    });
 
     function loadCheckoutSection() {
         $.ajax({
             url: 'include/ajax/room.php',
             type: 'post',
-            data: { type: 'load_checkout_section',page: 'detail' },
+            data: { type: 'load_checkout_section', page: 'detail' },
             success: function (data) {
                 $('#side_checkout #content').html(data);
-                $('#side_checkout .box').css({ 'max-width': '370px'});
+                $('#side_checkout .box').css({ 'max-width': '370px' });
             }
         });
     }
 
 
-    $(document).on('click','#nav_togle', function () {
-            $('header .side_content').toggleClass('active');
-        });
+    $(document).on('click', '#nav_togle', function () {
+        $('header .side_content').toggleClass('active');
+    });
 
-    
 
-    
+
+
 
     $(document).ready(function () {
 
@@ -371,88 +387,118 @@ $hotelLogo = $hotelArry['logo'];
             $('#side_checkout #personalDetail').html($html);
         });
 
-        $(document).on('submit','#personalDetailForm', function(e){
+        $(document).on('submit', '#personalDetailForm', function (e) {
             e.preventDefault();
-            $.ajax({
-                url : '<?= WS_FRONT_SITE.'/page/pay.php' ?>',
-                type : 'post',
-                data: $('#personalDetailForm').serialize()+'&slug=<?= $hotelSlug ?>',
-                success: function(data){
-                    var easebuzzCheckout = new EasebuzzCheckout('<?= $MERCHANT_KEY ?>', '<?= $ENV ?>');
 
-                    var access_key = JSON.parse(data).data;
 
-                    var options = {
-                        access_key: access_key, 
-                    onResponse: (response) => {
-                        console.log(response);
-                        var pid = response.easepayid; 
-                        var txnid = response.txnid;
-                        var surl = response.surl;
-                        var slug = response.udf1;
+            var name = $('#personName').val().trim();
+            var email = $('#personEmail').val().trim();
+            var phone = $('#personPhoneNo').val().trim();
 
-                        $.ajax({
-                            url : 'checkoutPay.php',
-                            type: 'post',
-                            data : {pid:pid,txnid:txnid,slug:slug},
-                            success: function(data){
-                                if(data == 1){
-                                    window.location.href = surl;
-                                }
-                            }
-                        });
+            if (name == '') {
+                
+            } else if (email == '') {
+                
+            } else if (phone == '') {
+                
+            } else if (phone.length != 10) {
+                alert('Invalid mobile No');
+            } else {
 
-                    },
-                    theme: "#123456" 
+                $.ajax({
+                    type: 'post',
+                    url: "<?php echo WS_FRONT_SITE.'/include/ajax/room.php' ?>",
+                    data: $('#personalDetailForm').serialize()+ '&slug=<?= $hotelSlug ?>',
+                    success: function (result) {
                     }
-                    easebuzzCheckout.initiatePayment(options);
-                }
-            });
+                });
+
+
+                $.ajax({
+                    url: '<?= WS_FRONT_SITE.'/page/pay.php' ?>',
+                    type: 'post',
+                    data: $('#personalDetailForm').serialize() + '&slug=<?= $hotelSlug ?>',
+                    success: function (data) {
+                        var easebuzzCheckout = new EasebuzzCheckout('<?= $MERCHANT_KEY ?>', '<?= $ENV ?>');
+
+                        var access_key = JSON.parse(data).data;
+
+                        var options = {
+                            access_key: access_key,
+                            onResponse: (response) => {
+                                var pid = response.easepayid;
+                                var txnid = response.txnid;
+                                var surl = response.surl;
+                                var slug = response.udf1;
+
+                                $.ajax({
+                                    url: '<?= WS_FRONT_SITE.'/checkoutPay.php' ?>',
+                                    type: 'post',
+                                    data: { pid: pid, txnid: txnid, slug: slug },
+                                    success: function (data) {
+                                        if (data == 1) {
+                                            window.location.href = surl;
+                                        }
+                                    }
+                                });
+
+                            },
+                            theme: "#123456"
+                        }
+                        easebuzzCheckout.initiatePayment(options);
+                    }
+                });
+
+            }
+
+
+
         });
 
 
         loadCheckoutSection();
-        $('#footerDescReadMoreBtn').on('click',function(){
+
+        $('#footerDescReadMoreBtn').on('click', function () {
             $('#footerDescReadMoreBtn').hide();
             $('#footerDescReadLessCaption').slideDown();
         });
-        $('#footerDescReadLessBtn').on('click',function(){
+        $('#footerDescReadLessBtn').on('click', function () {
             $('#footerDescReadMoreBtn').show();
             $('#footerDescReadLessCaption').slideUp();
         });
-        
-        
+
+
         var swiper = new Swiper(".mySwiper", {
             pagination: {
-              el: ".swiper-pagination",
-              dynamicBullets: true,
+                el: ".swiper-pagination",
+                dynamicBullets: true,
             },
-          });
-          
-          
-         
-        
-    });
-    
-    
-     $('#packageSection .owl-carousel').owlCarousel({
-            loop:false,
-            margin:10,
-            nav:true,
-            responsive:{
-                0:{
-                    items:1
-                },
-                600:{
-                    items:2
-                },
-                1000:{
-                    items:3
-                }
-            }
         });
 
-    
+
+
+
+    });
+
+
+    $('#packageSection .owl-carousel').owlCarousel({
+        loop: false,
+        margin: 10,
+        nav: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 2
+            },
+            1000: {
+                items: 3
+            }
+        }
+    });
+
+
 
 </script>
 
