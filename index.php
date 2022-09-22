@@ -17,14 +17,7 @@ $_SESSION['night_stay'] = 1;
 $_SESSION['checkIn'] = date('Y-m-d',$current_date);
 $_SESSION['checkout'] = date('Y-m-d',$current_date + (1 * $one_day));
 
-$hotelArry = getHotelDetail($_GET['name']);
 
-$hotelSlug = $_GET['name'];
-$hotelId = $hotelArry['id'];
-$hotelName = $hotelArry['name'];
-$hotelEmail = $hotelArry['email'];
-$hotelPhone = $hotelArry['phone'];
-$hotelLogo = $hotelArry['logo'];
 
 
 ?>

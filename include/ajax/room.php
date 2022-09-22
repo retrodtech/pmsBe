@@ -643,7 +643,7 @@ if(isset($_POST['type'])){
         $companyName = '';
         $companyGst = '';
 
-        $hotelId = 1;
+        $hotelId = $_SESSION['HOTEL_ID'];
         $add_on=date('Y-m-d h:i:s');
 
         $_SESSION['personName']=$personName;

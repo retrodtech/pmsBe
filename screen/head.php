@@ -27,3 +27,24 @@
 <link rel="stylesheet" href="<?php echo WS_BE_FRONT_SITE ?>/css/jquery.fancybox.min.css">
 <link rel="stylesheet" href="<?php echo WS_BE_FRONT_SITE ?>/css/responsive.css">
 
+<?php
+
+if(isset($_GET['name'])){
+    $hotelArry = getHotelDetail($_GET['name']);
+
+    $hotelSlug = $_GET['name'];
+    $hotelId = $hotelArry['id'];
+    $hotelName = $hotelArry['name'];
+    $hotelEmail = $hotelArry['email'];
+    $hotelPhone = $hotelArry['phone'];
+    $hotelLogo = $hotelArry['logo'];
+    
+    
+    $_SESSION['HOTEL_ID'] = $hotelArry['hCode'];
+    $_SESSION['ADMIN_ID'] = $hotelArry['id'];
+}
+
+
+
+?>
+

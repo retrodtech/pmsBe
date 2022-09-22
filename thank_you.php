@@ -99,7 +99,7 @@ $bid = explode('=',$dataArry[1])[1];
 
             $booking_row = mysqli_fetch_assoc($sql);
 
-
+            // pr("select * from booking where bookinId = '$bid'");
             $bookingNum = $booking_row['id'];
             $hId = $booking_row['hotelId'];
 
@@ -156,8 +156,6 @@ $bid = explode('=',$dataArry[1])[1];
             $tootalGstPrice = 0;
             $totalBookingPrice = 0;
            
-            
-            
             foreach(getBookingDetailById($oid,'',$hId)['room'] as $bookinList){
                 
                 $rid = $bookinList['rid'];
@@ -204,7 +202,6 @@ $bid = explode('=',$dataArry[1])[1];
                 $tootalGstPrice += $singleRoomPriceCalculator[0]['gst']; 
                 $totalBookingPrice += $singleRoomPriceCalculator[0]['total']; 
             }
-            
     
             $totalBookingPrice += $pickupPrice;
             

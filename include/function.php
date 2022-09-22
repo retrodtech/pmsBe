@@ -139,7 +139,7 @@ function imgUploadWithData($img,$path,$oldImg=''){
 
 function generateRecipt(){
     global $conDB;
-    $hotelId = $_SESSION['ADMIN_ID'];
+    $hotelId = $_SESSION['HOTEL_ID'];
     $sql = "select MAX(reciptNo) as recipt from booking where hotelId = '$hotelId'";
     $query = mysqli_query($conDB, $sql);
 
@@ -966,14 +966,14 @@ function checkRoomNumberExiist($rId, $checkIn='',$checkOut='',$rnum = ''){
             if($rnum != ''){
                 $sql .= " and bookingdetail.room_number = '$rnum'";
             }
-    $query = mysqli_query($conDB, $sql);
-    $data = array();
-    while($row = mysqli_fetch_assoc($query)){
-        $data[] = $row;
-    }
+            $query = mysqli_query($conDB, $sql);
+            $data = array();
+            while($row = mysqli_fetch_assoc($query)){
+                $data[] = $row;
+            }
 
 
-    return $data;
+            return $data;
 }
 
 function countBookingRow($reservation='',$arrive='',$failed='',$inHouse=''){
